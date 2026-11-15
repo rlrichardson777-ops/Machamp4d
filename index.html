@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Machamp 4D" />
+  <meta name="theme-color" content="#0d131a" />
+  <title>Machamp 4D - Hypertrophy &amp; Boxing Tracker</title>
+
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d131a'/%3E%3Ccircle cx='256' cy='256' r='182' fill='none' stroke='%23eab308' stroke-width='14' stroke-opacity='0.6'/%3E%3Crect x='96' y='196' width='44' height='120' rx='12' fill='%236488a3'/%3E%3Crect x='152' y='164' width='48' height='184' rx='14' fill='%23eab308'/%3E%3Crect x='200' y='238' width='112' height='36' rx='8' fill='%23f1f5f9'/%3E%3Crect x='312' y='164' width='48' height='184' rx='14' fill='%23eab308'/%3E%3Crect x='372' y='196' width='44' height='120' rx='12' fill='%236488a3'/%3E%3Ccircle cx='256' cy='256' r='16' fill='%23ef4444'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d131a'/%3E%3Ccircle cx='256' cy='256' r='182' fill='none' stroke='%23eab308' stroke-width='14' stroke-opacity='0.6'/%3E%3Crect x='96' y='196' width='44' height='120' rx='12' fill='%236488a3'/%3E%3Crect x='152' y='164' width='48' height='184' rx='14' fill='%23eab308'/%3E%3Crect x='200' y='238' width='112' height='36' rx='8' fill='%23f1f5f9'/%3E%3Crect x='312' y='164' width='48' height='184' rx='14' fill='%23eab308'/%3E%3Crect x='372' y='196' width='44' height='120' rx='12' fill='%236488a3'/%3E%3Ccircle cx='256' cy='256' r='16' fill='%23ef4444'/%3E%3C/svg%3E" />
+
+  <style>
+    :root {
+      /* Machamp Colorway: Deep Slate-Blue Skin, Champion Gold Belt, Crimson Crest */
+      --bg: #0d131a;
+      --surface: #16212c;
+      --surface-alt: #21303f;
+      --border: #33485c;
+      --text: #f1f5f9;
+      --muted: #93adc2;
+      --accent: #eab308;      /* Champion Gold Belt */
+      --slate: #6488a3;       /* Machamp Blue-Grey */
+      --success: #eab308;     /* Gold Completion */
+      --warn: #f87171;        /* Crimson Crest Cue */
+      --danger: #ef4444;      /* Machamp Eye/Crest Red */
+      --safe-top: env(safe-area-inset-top, 12px);
+      --safe-bottom: env(safe-area-inset-bottom, 16px);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-top: calc(var(--safe-top) + 10px);
+      padding-bottom: calc(var(--safe-bottom) + 115px);
+      line-height: 1.4;
+      overscroll-behavior-y: none;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 14px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 8px;
+    }
+
+    .brand h1 {
+      font-size: 1.28rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, #facc15, #93adc2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand span {
+      font-size: 0.7rem;
+      color: #f87171;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 4px;
+      background: var(--surface);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .nav-pill {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .nav-pill.active {
+      background: linear-gradient(135deg, #eab308, #ca8a04);
+      color: #0d131a;
+    }
+
+    .day-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .day-tab {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 10px 4px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .day-tab strong {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+
+    .day-tab small {
+      display: block;
+      font-size: 0.68rem;
+      margin-top: 2px;
+    }
+
+    .day-tab.active {
+      background: rgba(234, 179, 8, 0.14);
+      border-color: var(--accent);
+    }
+
+    .day-tab.active strong {
+      color: var(--accent);
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .stat-box span {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .stat-box strong {
+      font-size: 1rem;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .exercise-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .ex-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .ex-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .ex-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .ex-target {
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: var(--surface-alt);
+      color: var(--accent);
+      padding: 4px 7px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .mini-btn {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 4px 7px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .mini-btn.demo {
+      background: rgba(234, 179, 8, 0.14);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .mini-btn.danger:active {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .safety-cue {
+      font-size: 0.76rem;
+      color: #fecaca;
+      background: rgba(239, 68, 68, 0.12);
+      border-left: 3px solid var(--danger);
+      padding: 6px 9px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .prev-note {
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .overload-badge {
+      display: inline-block;
+      background: rgba(234, 179, 8, 0.16);
+      border: 1px solid var(--accent);
+      color: #fde047;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 5px 9px;
+      border-radius: 7px;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .set-headers {
+      display: grid;
+      grid-template-columns: 38px 1fr 1fr 48px 34px;
+      gap: 6px;
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .set-row {
+      display: grid;
+      grid-template-columns: 38px 1fr 1fr 48px 34px;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+
+    .set-row.completed input {
+      border-color: var(--accent);
+      background: rgba(234, 179, 8, 0.10);
+    }
+
+    .set-num {
+      background: var(--surface-alt);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+    }
+
+    .set-input {
+      width: 100%;
+      height: 38px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+    }
+
+    .set-input:focus {
+      border-color: var(--accent);
+    }
+
+    .check-btn {
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      color: var(--muted);
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .check-btn.done {
+      background: linear-gradient(135deg, #eab308, #ca8a04);
+      border-color: var(--accent);
+      color: #0d131a;
+    }
+
+    .del-set-btn {
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(239, 68, 68, 0.10);
+      color: var(--muted);
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .add-set-btn {
+      width: 100%;
+      margin-top: 4px;
+      padding: 8px;
+      background: rgba(100, 136, 163, 0.12);
+      border: 1px dashed rgba(147, 173, 194, 0.45);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .add-ex-box {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .add-ex-toggle {
+      width: 100%;
+      padding: 12px;
+      background: var(--surface);
+      border: 1px dashed var(--slate);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .form-field {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.88rem;
+      padding: 9px 10px;
+      margin-bottom: 8px;
+      outline: none;
+    }
+
+    .form-field:focus {
+      border-color: var(--accent);
+    }
+
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .form-row-3 label {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-bottom: 3px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .finish-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #eab308, #ca8a04);
+      color: #0d131a;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    /* Demo Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 11, 16, 0.88);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 500px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .close-modal-btn {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .demo-stage {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .video-ratio {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+    }
+
+    .video-ratio iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .url-bar {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    /* Charts View */
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .chart-select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    .metric-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .metric-btn {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .metric-btn.active {
+      background: rgba(234, 179, 8, 0.16);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .svg-wrap {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 6px 4px;
+      margin-top: 8px;
+    }
+
+    /* History & Backup View */
+    .history-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .history-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .backup-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 16px;
+    }
+
+    .backup-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .sec-btn {
+      flex: 1;
+      padding: 10px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .timer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(13, 19, 26, 0.96);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      padding: 10px 14px calc(var(--safe-bottom) + 8px);
+      z-index: 50;
+    }
+
+    .timer-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timer-display {
+      font-size: 1.25rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      min-width: 62px;
+    }
+
+    .timer-presets {
+      display: flex;
+      gap: 5px;
+    }
+
+    .t-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 7px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .t-btn.primary {
+      background: linear-gradient(135deg, #eab308, #ca8a04);
+      color: #0d131a;
+      border-color: var(--accent);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="brand">
+      <h1>Machamp 4D</h1>
+      <span>Hypertrophy &amp; Heavy Bag</span>
+    </div>
+    <div class="nav-pills">
+      <button id="navTrain" class="nav-pill active" onclick="switchView('train')">Workout</button>
+      <button id="navCharts" class="nav-pill" onclick="switchView('charts')">Charts</button>
+      <button id="navHistory" class="nav-pill" onclick="switchView('history')">History</button>
+    </div>
+  </header>
+
+  <div id="viewTrain">
+    <div id="dayTabs" class="day-tabs"></div>
+
+    <div class="stats-bar">
+      <div class="stat-box">
+        <span>Sets Done</span>
+        <strong id="statSets">0 / 0</strong>
+      </div>
+      <div class="stat-box">
+        <span>Volume (lbs)</span>
+        <strong id="statVolume">0</strong>
+      </div>
+      <div class="stat-box">
+        <span>Overload Ready</span>
+        <strong id="statOverload" style="color:var(--accent);">0</strong>
+      </div>
+    </div>
+
+    <div id="exerciseList"></div>
+
+    <button id="showAddExBtn" class="add-ex-toggle" onclick="toggleAddExerciseForm(true)">
+      + Add / Substitute Exercise
+    </button>
+
+    <div id="addExForm" class="add-ex-box hidden">
+      <strong style="display:block; font-size:0.9rem; margin-bottom:8px; color:var(--accent);">
+        Add Exercise to Current Day
+      </strong>
+      <input id="newExName" class="form-field" type="text" placeholder="Exercise name (e.g., Machine Chest Press)" />
+      <div class="form-row-3">
+        <div>
+          <label>Sets</label>
+          <input id="newExSets" class="form-field" type="number" inputmode="numeric" value="3" />
+        </div>
+        <div>
+          <label>Min Reps</label>
+          <input id="newExMin" class="form-field" type="number" inputmode="numeric" value="8" />
+        </div>
+        <div>
+          <label>Max Reps</label>
+          <input id="newExMax" class="form-field" type="number" inputmode="numeric" value="12" />
+        </div>
+      </div>
+      <input id="newExCue" class="form-field" type="text" placeholder="Disc-safety / form cue (optional)" />
+      <input id="newExVideo" class="form-field" type="url" placeholder="YouTube demo link (optional)" />
+      <div style="display:flex; gap:8px;">
+        <button class="sec-btn" style="background:linear-gradient(135deg, #eab308, #ca8a04); color:#0d131a; border-color:var(--accent);" onclick="saveNewExercise()">Save Exercise</button>
+        <button class="sec-btn" onclick="toggleAddExerciseForm(false)">Cancel</button>
+      </div>
+    </div>
+
+    <button class="finish-btn" onclick="finishSession()">Complete &amp; Save Workout</button>
+  </div>
+
+  <div id="viewCharts" class="hidden">
+    <div class="chart-card">
+      <label for="chartExerciseSelect" style="display:block; font-size:0.72rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:6px;">
+        Select Movement
+      </label>
+      <select id="chartExerciseSelect" class="chart-select" onchange="renderChart()"></select>
+
+      <div class="metric-toggle">
+        <button id="metricWeightBtn" class="metric-btn active" onclick="setChartMetric('weight')">Top Weight (lbs)</button>
+        <button id="metricVolumeBtn" class="metric-btn" onclick="setChartMetric('volume')">Session Volume (lbs)</button>
+      </div>
+
+      <div class="stats-bar" style="margin-bottom:8px;">
+        <div class="stat-box">
+          <span>Start</span>
+          <strong id="chartStart">--</strong>
+        </div>
+        <div class="stat-box">
+          <span>All-Time PR</span>
+          <strong id="chartPR" style="color:var(--accent);">--</strong>
+        </div>
+        <div class="stat-box">
+          <span>Net Gain</span>
+          <strong id="chartGain" style="color:var(--accent);">--</strong>
+        </div>
+      </div>
+
+      <div id="chartContainer" class="svg-wrap"></div>
+    </div>
+
+    <div class="chart-card">
+      <strong style="font-size:0.88rem; color:var(--text);">Overall Total Workout Volume Trend</strong>
+      <p style="font-size:0.74rem; color:var(--muted); margin-top:2px;">
+        Combined tonnage lifted across your last 10 completed workouts.
+      </p>
+      <div id="overallChartContainer" class="svg-wrap"></div>
+    </div>
+  </div>
+
+  <div id="viewHistory" class="hidden">
+    <div id="historyList"></div>
+
+    <div class="backup-box">
+      <strong style="font-size:0.9rem;">Data Backup &amp; Transfer</strong>
+      <p style="font-size:0.76rem; color:var(--muted); margin-top:4px;">
+        Your workout logs and custom demo video links are saved offline on this device.
+      </p>
+      <div class="backup-actions">
+        <button class="sec-btn" onclick="exportData()">Export JSON</button>
+        <button class="sec-btn" onclick="document.getElementById('importFile').click()">Import JSON</button>
+        <input type="file" id="importFile" accept=".json" class="hidden" onchange="importData(event)" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM & VIDEO DEMO MODAL -->
+<div id="demoModal" class="modal-backdrop hidden" onclick="closeDemoOnBackdrop(event)">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div id="demoModalTitle" class="modal-title">Exercise Demo</div>
+      <button class="close-modal-btn" onclick="closeDemoModal()">Close &times;</button>
+    </div>
+
+    <div class="metric-toggle" style="margin-bottom:10px;">
+      <button id="demoModeAnimBtn" class="metric-btn active" onclick="setDemoMode('anim')">Stick-Figure Form</button>
+      <button id="demoModeVidBtn" class="metric-btn" onclick="setDemoMode('video')">Custom Video</button>
+    </div>
+
+    <div id="demoStage" class="demo-stage"></div>
+
+    <div id="demoCueBox" class="safety-cue" style="margin-bottom:10px;"></div>
+
+    <div style="border-top:1px solid var(--border); padding-top:10px;">
+      <label style="display:block; font-size:0.7rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;">
+        Paste YouTube Demo Video URL
+      </label>
+      <div class="url-bar">
+        <input id="demoVideoInput" class="form-field" style="margin-bottom:0; flex:1;" type="url" placeholder="https://youtube.com/watch?v=..." />
+        <button class="mini-btn demo" style="padding:0 12px; font-size:0.78rem;" onclick="saveDemoVideoUrl()">Save</button>
+        <button id="clearVidBtn" class="mini-btn danger hidden" style="padding:0 10px; font-size:0.78rem;" onclick="clearDemoVideoUrl()">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="timer-bar">
+  <div class="timer-inner">
+    <div id="timerDisplay" class="timer-display">01:30</div>
+    <div class="timer-presets">
+      <button class="t-btn" onclick="setTimer(60)">60s</button>
+      <button class="t-btn" onclick="setTimer(90)">90s</button>
+      <button class="t-btn" onclick="setTimer(120)">2m</button>
+      <button id="timerToggleBtn" class="t-btn primary" onclick="toggleTimer()">Start</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const manifestObj = {
+    name: "Machamp 4D Hypertrophy Tracker",
+    short_name: "Machamp 4D",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#0d131a",
+    theme_color: "#0d131a",
+    icons: [{
+      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d131a'/%3E%3Ccircle cx='256' cy='256' r='182' fill='none' stroke='%23eab308' stroke-width='14' stroke-opacity='0.6'/%3E%3Crect x='96' y='196' width='44' height='120' rx='12' fill='%236488a3'/%3E%3Crect x='152' y='164' width='48' height='184' rx='14' fill='%23eab308'/%3E%3Crect x='200' y='238' width='112' height='36' rx='8' fill='%23f1f5f9'/%3E%3Crect x='312' y='164' width='48' height='184' rx='14' fill='%23eab308'/%3E%3Crect x='372' y='196' width='44' height='120' rx='12' fill='%236488a3'/%3E%3Ccircle cx='256' cy='256' r='16' fill='%23ef4444'/%3E%3C/svg%3E",
+      sizes: "512x512",
+      type: "image/svg+xml"
+    }]
+  };
+  const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
+  const manifestLink = document.createElement('link');
+  manifestLink.rel = 'manifest';
+  manifestLink.href = URL.createObjectURL(manifestBlob);
+  document.head.appendChild(manifestLink);
+
+  const DEFAULT_PROGRAM = [
+    {
+      id: "day1",
+      short: "Day 1",
+      label: "Upper A",
+      title: "Upper Body A - Chest, Back & Delts",
+      exercises: [
+        { name: "Incline Barbell Press", anim: "press", minReps: 6, maxReps: 8, cue: "Keep upper back planted on bench; avoid excessive lumbar arch.", sets: [{ w: 135, r: 8, done: false }, { w: 135, r: 8, done: false }, { w: 135, r: 7, done: false }] },
+        { name: "Chest-Supported Incline DB Row", anim: "row", minReps: 8, maxReps: 10, cue: "Chest glued to 30-45 deg incline pad; zero lower-back shear.", sets: [{ w: 50, r: 10, done: false }, { w: 50, r: 10, done: false }, { w: 50, r: 9, done: false }] },
+        { name: "Flat Barbell Press / Heavy Dips", anim: "press", minReps: 8, maxReps: 10, cue: "Brace abs and keep feet planted flat on floor.", sets: [{ w: 155, r: 10, done: false }, { w: 155, r: 9, done: false }, { w: 155, r: 8, done: false }] },
+        { name: "Wide-Grip Lat Pulldown", anim: "pulldown", minReps: 8, maxReps: 10, cue: "Lock thighs under pad; drive elbows down without swinging torso.", sets: [{ w: 130, r: 10, done: false }, { w: 130, r: 10, done: false }, { w: 130, r: 9, done: false }] },
+        { name: "Incline Bench DB Rear Delt Flyes", anim: "raise", minReps: 12, maxReps: 15, cue: "Face-down chest support; sweep out without upper-trap shrug.", sets: [{ w: 20, r: 15, done: false }, { w: 20, r: 14, done: false }, { w: 20, r: 13, done: false }] },
+        { name: "Standing Cable Lateral Raises", anim: "raise", minReps: 12, maxReps: 15, cue: "Slight 5-10 deg hip hinge, core braced, lead with elbows.", sets: [{ w: 15, r: 15, done: false }, { w: 15, r: 14, done: false }, { w: 15, r: 12, done: false }] }
+      ]
+    },
+    {
+      id: "day2",
+      short: "Day 2",
+      label: "Lower/Core",
+      title: "Lower Body & Core - Disc-Safe",
+      exercises: [
+        { name: "Leg Press (High & Wide Stance)", anim: "legpress", minReps: 10, maxReps: 12, cue: "3-sec negative; STOP before tailbone/hips tuck under (butt wink).", sets: [{ w: 270, r: 12, done: false }, { w: 270, r: 11, done: false }, { w: 270, r: 10, done: false }] },
+        { name: "Seated Leg Curl", anim: "legcurl", minReps: 10, maxReps: 12, cue: "Thigh pad clamped tight; keeps pelvis locked flat (never lying).", sets: [{ w: 110, r: 12, done: false }, { w: 110, r: 12, done: false }, { w: 110, r: 11, done: false }] },
+        { name: "Cable Pull-Through", anim: "hinge", minReps: 10, maxReps: 12, cue: "Hinge hips straight back with neutral spine; 2-sec glute squeeze.", sets: [{ w: 80, r: 12, done: false }, { w: 80, r: 12, done: false }, { w: 80, r: 12, done: false }] },
+        { name: "Leg Extension", anim: "legext", minReps: 12, maxReps: 15, cue: "Smooth 1-sec top hold; never slam or hyperextend knees.", sets: [{ w: 120, r: 15, done: false }, { w: 120, r: 14, done: false }, { w: 120, r: 13, done: false }] },
+        { name: "Seated Calf Raise", anim: "legext", minReps: 12, maxReps: 15, cue: "Pad rests on thighs (zero spine load); 2-sec bottom stretch.", sets: [{ w: 90, r: 15, done: false }, { w: 90, r: 15, done: false }, { w: 90, r: 14, done: false }] },
+        { name: "Standing Cable Pallof Press", anim: "row", minReps: 10, maxReps: 12, cue: "Anti-rotation core brace; 2-sec full extension hold per side.", sets: [{ w: 30, r: 12, done: false }, { w: 30, r: 12, done: false }, { w: 30, r: 12, done: false }] },
+        { name: "Ab Wheel Rollout (Pushup-Stop)", anim: "core", minReps: 6, maxReps: 8, cue: "Strict pelvic tuck; stop at pushup position with zero back sag.", sets: [{ w: 0, r: 8, done: false }, { w: 0, r: 8, done: false }, { w: 0, r: 7, done: false }] }
+      ]
+    },
+    {
+      id: "day3",
+      short: "Day 3",
+      label: "Upper B",
+      title: "Upper Body B - Delts, Serratus & Width",
+      exercises: [
+        { name: "Incline DB Press / Heavy Pec Deck", anim: "press", minReps: 8, maxReps: 10, cue: "Shoulder blades retracted into pad; controlled 2-sec negative.", sets: [{ w: 65, r: 10, done: false }, { w: 65, r: 9, done: false }, { w: 65, r: 8, done: false }] },
+        { name: "Half-Kneeling Single-Arm Cable Row", anim: "row", minReps: 10, maxReps: 12, cue: "Keep shoulders square and core braced; zero lumbar twisting.", sets: [{ w: 55, r: 12, done: false }, { w: 55, r: 11, done: false }, { w: 55, r: 10, done: false }] },
+        { name: "Single-Arm Cable Rear Delt Flyes", anim: "raise", minReps: 12, maxReps: 15, cue: "Brace non-working hand on frame; smooth posterior arc.", sets: [{ w: 15, r: 15, done: false }, { w: 15, r: 14, done: false }, { w: 15, r: 13, done: false }] },
+        { name: "High-to-Low Cable Crossovers", anim: "press", minReps: 12, maxReps: 15, cue: "Slight forward lean with braced abs; squeeze lower chest.", sets: [{ w: 35, r: 15, done: false }, { w: 35, r: 14, done: false }, { w: 35, r: 12, done: false }] },
+        { name: "Incline DB Serratus Punches", anim: "press", minReps: 12, maxReps: 15, cue: "Back supported on incline; protract shoulder blades at top.", sets: [{ w: 30, r: 15, done: false }, { w: 30, r: 15, done: false }, { w: 30, r: 14, done: false }] },
+        { name: "Captain's Chair Knee Raises", anim: "core", minReps: 10, maxReps: 12, cue: "Lower back pressed firmly against pad; 3-sec controlled lowering.", sets: [{ w: 0, r: 12, done: false }, { w: 0, r: 12, done: false }, { w: 0, r: 10, done: false }] }
+      ]
+    },
+    {
+      id: "day4",
+      short: "Day 4",
+      label: "Upper C",
+      title: "Upper Body C - Arms, Forearms & Core",
+      exercises: [
+        { name: "Cable Hammer Curls (Rope)", anim: "arms", minReps: 10, maxReps: 12, cue: "Elbows pinned to sides; neutral grip for upper-forearm ridge.", sets: [{ w: 45, r: 12, done: false }, { w: 45, r: 11, done: false }, { w: 45, r: 10, done: false }] },
+        { name: "Tricep Cable Rope Pushdowns", anim: "arms", minReps: 10, maxReps: 12, cue: "Tall neutral spine; flare rope apart at bottom lockout.", sets: [{ w: 55, r: 12, done: false }, { w: 55, r: 12, done: false }, { w: 55, r: 11, done: false }] },
+        { name: "Seated Wrist Curls (Palms Up)", anim: "arms", minReps: 12, maxReps: 15, cue: "Forearms resting on thighs; zero lower-back momentum.", sets: [{ w: 25, r: 15, done: false }, { w: 25, r: 15, done: false }, { w: 25, r: 14, done: false }] },
+        { name: "Reverse Cable Wrist Curls (Palms Down)", anim: "arms", minReps: 12, maxReps: 15, cue: "Seated or supported; target top-side forearm extensors.", sets: [{ w: 20, r: 15, done: false }, { w: 20, r: 14, done: false }, { w: 20, r: 13, done: false }] },
+        { name: "Lying Dead Bug Iso-Press", anim: "core", minReps: 8, maxReps: 10, cue: "Press lower back flat into floor throughout every rep.", sets: [{ w: 0, r: 10, done: false }, { w: 0, r: 10, done: false }, { w: 0, r: 10, done: false }] },
+        { name: "Heavy Bag Boxing Rounds (Mins)", anim: "boxing", minReps: 3, maxReps: 3, cue: "3-min rounds (1 min rest); pivot hips/feet, never twist spine.", sets: [{ w: 0, r: 3, done: false }, { w: 0, r: 3, done: false }, { w: 0, r: 3, done: false }] }
+      ]
+    }
+  ];
+
+  const STORAGE_KEY = "ironspine_4d_state_v2";
+  let state = loadState();
+  let activeDayIdx = state.activeDayIdx || 0;
+  let activeChartMetric = "weight";
+  let activeDemoExIdx = null;
+  let activeDemoMode = "anim";
+
+  function loadState() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (saved && Array.isArray(saved.program) && saved.program.length === 4) {
+        return saved;
+      }
+    } catch (e) {}
+    return {
+      activeDayIdx: 0,
+      program: JSON.parse(JSON.stringify(DEFAULT_PROGRAM)),
+      history: []
+    };
+  }
+
+  function saveState() {
+    state.activeDayIdx = activeDayIdx;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  /* STICK-FIGURE BIOMECHANICS ANIMATION ENGINE (MACHAMP PALETTE) */
+  function getStickFigureSvg(ex) {
+    const n = (ex.name || "").toLowerCase();
+    let type = ex.anim || "press";
+    if (!ex.anim) {
+      if (n.includes("leg press") || n.includes("squat")) type = "legpress";
+      else if (n.includes("leg curl")) type = "legcurl";
+      else if (n.includes("extension") || n.includes("calf")) type = "legext";
+      else if (n.includes("pull-through") || n.includes("rdl") || n.includes("deadlift")) type = "hinge";
+      else if (n.includes("pulldown")) type = "pulldown";
+      else if (n.includes("row") || n.includes("pallof")) type = "row";
+      else if (n.includes("lateral") || n.includes("rear delt") || n.includes("fly")) type = "raise";
+      else if (n.includes("curl") || n.includes("tricep") || n.includes("wrist")) type = "arms";
+      else if (n.includes("box")) type = "boxing";
+      else if (n.includes("rollout") || n.includes("dead bug") || n.includes("knee raise")) type = "core";
+    }
+
+    const styles = `
+      <style>
+        .sf-bone { stroke: #f1f5f9; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+        .sf-accent { stroke: #eab308; stroke-width: 5; stroke-linecap: round; fill: none; }
+        .sf-prop { stroke: #6488a3; stroke-width: 4; stroke-linecap: round; fill: none; }
+        .sf-joint { fill: #ef4444; }
+        .sf-head { fill: none; stroke: #f1f5f9; stroke-width: 4.5; }
+        @keyframes pressAnim { 0%,100% { transform: translate(0px,0px); } 50% { transform: translate(14px,-24px); } }
+        @keyframes legPressAnim { 0%,100% { transform: translate(0px,0px); } 50% { transform: translate(24px,-18px); } }
+        @keyframes curlLegAnim { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(52deg); } }
+        @keyframes extLegAnim { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-56deg); } }
+        @keyframes pullAnim { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(28px); } }
+        @keyframes rowAnim { 0%,100% { transform: translateX(0px); } 50% { transform: translateX(26px); } }
+        @keyframes raiseAnim { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-68deg); } }
+        @keyframes armAnim { 0%,100% { transform: rotate(-30deg); } 50% { transform: rotate(35deg); } }
+        @keyframes hingeAnim { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(42deg); } }
+        @keyframes boxAnim { 0%,100% { transform: translateX(0px); } 50% { transform: translateX(28px); } }
+        @keyframes coreAnim { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-32deg); } }
+      </style>
+    `;
+
+    if (type === "legpress") {
+      return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+        <polyline points="62,72 86,125 142,125" class="sf-prop" />
+        <circle cx="72" cy="56" r="11" class="sf-head" />
+        <line x1="78" y1="68" x2="96" y2="115" class="sf-bone" />
+        <line x1="96" y1="115" x2="136" y2="115" class="sf-bone" />
+        <circle cx="96" cy="115" r="5" class="sf-joint" />
+        <g style="animation: legPressAnim 2.6s ease-in-out infinite;">
+          <polyline points="136,115 162,88 205,64" class="sf-accent" />
+          <line x1="212" y1="45" x2="196" y2="85" class="sf-prop" />
+        </g>
+        <text x="160" y="22" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">LOCK PELVIS IN SEAT - STOP BEFORE BUTT WINK</text>
+      </svg>`;
+    }
+
+    if (type === "legcurl") {
+      return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+        <polyline points="105,68 105,125 162,125" class="sf-prop" />
+        <circle cx="114" cy="52" r="11" class="sf-head" />
+        <line x1="114" y1="64" x2="114" y2="115" class="sf-bone" />
+        <line x1="114" y1="115" x2="165" y2="115" class="sf-bone" />
+        <g style="transform-origin: 165px 115px; animation: curlLegAnim 2.4s ease-in-out infinite;">
+          <line x1="165" y1="115" x2="205" y2="95" class="sf-accent" />
+        </g>
+        <text x="160" y="22" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">THIGH PAD LOCKED - ZERO LUMBAR ARCH</text>
+      </svg>`;
+    }
+
+    if (type === "legext") {
+      return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+        <polyline points="105,68 105,125 162,125" class="sf-prop" />
+        <circle cx="114" cy="52" r="11" class="sf-head" />
+        <line x1="114" y1="64" x2="114" y2="115" class="sf-bone" />
+        <line x1="114" y1="115" x2="165" y2="115" class="sf-bone" />
+        <g style="transform-origin: 165px 115px; animation: extLegAnim 2.4s ease-in-out infinite;">
+          <line x1="165" y1="115" x2="172" y2="156" class="sf-accent" />
+        </g>
+        <text x="160" y="22" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">CONTROLLED 1-SEC TOP HOLD - ZERO SPINE LOAD</text>
+      </svg>`;
+    }
+
+    if (type === "press") {
+      return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+        <line x1="75" y1="138" x2="145" y2="85" class="sf-prop" />
+        <line x1="145" y1="138" x2="225" y2="138" class="sf-prop" />
+        <circle cx="152" cy="70" r="11" class="sf-head" />
+        <line x1="142" y1="80" x2="94" y2="122" class="sf-bone" />
+        <polyline points="94,122 155,122 162,155" class="sf-bone" />
+        <g style="animation: pressAnim 2.4s ease-in-out infinite;">
+          <line x1="132" y1="88" x2="152" y2="62" class="sf-accent" />
+          <circle cx="154" cy="58" r="7" class="sf-joint" />
+        </g>
+        <text x="160" y="22" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">UPPER BACK PLANTED - BRACED RIB CAGE</text>
+      </svg>`;
+    }
+
+    if (type === "pulldown") {
+      return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+        <line x1="160" y1="12" x2="160" y2="52" stroke="#eab308" stroke-width="2" stroke-dasharray="4,3" />
+        <rect x="132" y="122" width="56" height="34" rx="4" fill="#21303f" stroke="#6488a3" stroke-width="2" />
+        <circle cx="160" cy="68" r="11" class="sf-head" />
+        <line x1="160" y1="80" x2="160" y2="122" class="sf-bone" />
+        <g style="animation: pullAnim 2.4s ease-in-out infinite;">
+          <line x1="115" y1="48" x2="205" y2="48" class="sf-prop" />
+          <polyline points="160,86 126,68 122,48" class="sf-accent" />
+          <polyline points="160,86 194,68 198,48" class="sf-accent" />
+        </g>
+        <text x="160" y="172" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">DRIVE ELBOWS DOWN - NO TORSO SWING</text>
+      </svg>`;
+    }
+
+    if (type === "row") {
+      return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+        <line x1="20" y1="155" x2="300" y2="155" class="sf-prop" />
+        <line x1="245" y1="40" x2="245" y2="155" class="sf-prop" />
+        <circle cx="132" cy="58" r="11" class="sf-head" />
+        <line x1="132" y1="70" x2="132" y2="122" class="sf-bone" />
+        <polyline points="132,122 178,122 184,155" class="sf-bone" />
+        <g style="animation: rowAnim 2.4s ease-in-out infinite;">
+          <line x1="132" y1="82" x2="178" y2="86" class="sf-accent" />
+          <line x1="178" y1="86" x2="245" y2="86" stroke="#eab308" stroke-width="2" stroke-dasharray="4,3" />
+        </g>
+        <text x="160" y="24" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">SQUARE SHOULDERS - ZERO LUMBAR ROTATION</text>
+      </svg>`;
+    }
+
+    if (type === "raise") {
+      return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+        <circle cx="160" cy="48" r="11" class="sf-head" />
+        <line x1="160" y1="60" x2="160" y2="112" class="sf-bone" />
+        <line x1="160" y1="112" x2="148" y2="158" class="sf-bone" />
+        <line x1="160" y1="112" x2="172" y2="158" class="sf-bone" />
+        <g style="transform-origin: 160px 68px; animation: raiseAnim 2.4s ease-in-out infinite;">
+          <line x1="160" y1="68" x2="195" y2="108" class="sf-accent" />
+          <circle cx="195" cy="108" r="5" class="sf-joint" />
+        </g>
+        <text x="160" y="22" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">LEAD WITH ELBOWS - KEEP TRAPS RELAXED</text>
+      </svg>`;
+    }
+
+    if (type === "arms") {
+      return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+        <circle cx="152" cy="48" r="11" class="sf-head" />
+        <line x1="152" y1="60" x2="152" y2="112" class="sf-bone" />
+        <line x1="152" y1="112" x2="146" y2="155" class="sf-bone" />
+        <line x1="152" y1="68" x2="154" y2="94" class="sf-bone" />
+        <g style="transform-origin: 154px 94px; animation: armAnim 2.2s ease-in-out infinite;">
+          <line x1="154" y1="94" x2="188" y2="94" class="sf-accent" />
+        </g>
+        <text x="160" y="22" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">ELBOWS PINNED - TALL NEUTRAL SPINE</text>
+      </svg>`;
+    }
+
+    if (type === "boxing") {
+      return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+        <rect x="215" y="28" width="28" height="96" rx="12" fill="#21303f" stroke="#6488a3" stroke-width="2.5" />
+        <circle cx="142" cy="48" r="11" class="sf-head" />
+        <line x1="142" y1="60" x2="142" y2="112" class="sf-bone" />
+        <line x1="142" y1="112" x2="126" y2="155" class="sf-bone" />
+        <line x1="142" y1="112" x2="162" y2="155" class="sf-bone" />
+        <g style="animation: boxAnim 1.4s ease-in-out infinite;">
+          <line x1="142" y1="72" x2="186" y2="68" class="sf-accent" />
+          <circle cx="188" cy="68" r="6" class="sf-joint" />
+        </g>
+        <text x="160" y="20" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">PIVOT HIPS &amp; FEET - NEVER TWIST LUMBAR</text>
+      </svg>`;
+    }
+
+    if (type === "core") {
+      return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+        <line x1="20" y1="145" x2="300" y2="145" class="sf-prop" />
+        <circle cx="96" cy="130" r="11" class="sf-head" />
+        <line x1="108" y1="138" x2="185" y2="138" class="sf-bone" />
+        <line x1="125" y1="138" x2="125" y2="96" class="sf-accent" />
+        <g style="transform-origin: 185px 138px; animation: coreAnim 2.6s ease-in-out infinite;">
+          <polyline points="185,138 185,102 225,102" class="sf-accent" />
+        </g>
+        <text x="160" y="26" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">POSTERIOR PELVIC TUCK - ZERO BACK SAG</text>
+      </svg>`;
+    }
+
+    return `<svg viewBox="0 0 320 180" style="width:100%; display:block;">${styles}
+      <line x1="20" y1="155" x2="300" y2="155" class="sf-prop" />
+      <polyline points="148,155 144,125 138,98" class="sf-bone" />
+      <g style="transform-origin: 138px 98px; animation: hingeAnim 2.6s ease-in-out infinite;">
+        <line x1="138" y1="98" x2="144" y2="54" class="sf-accent" />
+        <circle cx="145" cy="38" r="11" class="sf-head" />
+        <line x1="142" y1="62" x2="156" y2="96" class="sf-bone" />
+      </g>
+      <text x="160" y="20" fill="#93adc2" font-size="11" font-weight="700" text-anchor="middle">HIP HINGE BACK + NEUTRAL FLAT SPINE</text>
+    </svg>`;
+  }
+
+  function extractYouTubeId(url) {
+    if (!url) return null;
+    const regExp = /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.trim().match(regExp);
+    return match ? match[1] : null;
+  }
+
+  function openDemoModal(exIdx) {
+    activeDemoExIdx = exIdx;
+    const ex = state.program[activeDayIdx].exercises[exIdx];
+    document.getElementById("demoModalTitle").textContent = ex.name;
+    document.getElementById("demoCueBox").innerHTML = `<strong>FORM CUE:</strong> ${escapeHtml(ex.cue)}`;
+    document.getElementById("demoVideoInput").value = ex.videoUrl || "";
+    document.getElementById("clearVidBtn").classList.toggle("hidden", !ex.videoUrl);
+
+    const ytId = extractYouTubeId(ex.videoUrl);
+    activeDemoMode = ytId ? "video" : "anim";
+    renderDemoStage();
+    document.getElementById("demoModal").classList.remove("hidden");
+  }
+
+  function closeDemoModal() {
+    document.getElementById("demoModal").classList.add("hidden");
+    document.getElementById("demoStage").innerHTML = "";
+    activeDemoExIdx = null;
+  }
+
+  function closeDemoOnBackdrop(e) {
+    if (e.target.id === "demoModal") closeDemoModal();
+  }
+
+  function setDemoMode(mode) {
+    activeDemoMode = mode;
+    renderDemoStage();
+  }
+
+  function renderDemoStage() {
+    if (activeDemoExIdx === null) return;
+    const ex = state.program[activeDayIdx].exercises[activeDemoExIdx];
+    const stage = document.getElementById("demoStage");
+
+    document.getElementById("demoModeAnimBtn").classList.toggle("active", activeDemoMode === "anim");
+    document.getElementById("demoModeVidBtn").classList.toggle("active", activeDemoMode === "video");
+
+    if (activeDemoMode === "video") {
+      const ytId = extractYouTubeId(ex.videoUrl);
+      if (ytId) {
+        stage.innerHTML = `
+          <div class="video-ratio">
+            <iframe src="https://www.youtube.com/embed/${ytId}?rel=0&playsinline=1"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+          </div>`;
+      } else {
+        stage.innerHTML = `
+          <div style="text-align:center; padding:32px 16px; color:var(--muted); font-size:0.82rem;">
+            No YouTube link saved for this exercise yet.<br>Paste a YouTube link below and tap <strong>Save</strong>, or switch to <strong>Stick-Figure Form</strong>.
+          </div>`;
+      }
+    } else {
+      stage.innerHTML = getStickFigureSvg(ex);
+    }
+  }
+
+  function saveDemoVideoUrl() {
+    if (activeDemoExIdx === null) return;
+    const url = document.getElementById("demoVideoInput").value.trim();
+    const ytId = extractYouTubeId(url);
+    if (!ytId) {
+      alert("Please paste a valid YouTube link (youtube.com/watch?v=..., youtu.be/..., or youtube.com/shorts/...).");
+      return;
+    }
+    const ex = state.program[activeDayIdx].exercises[activeDemoExIdx];
+    ex.videoUrl = url;
+    saveState();
+    document.getElementById("clearVidBtn").classList.remove("hidden");
+    activeDemoMode = "video";
+    renderDemoStage();
+    renderWorkout();
+  }
+
+  function clearDemoVideoUrl() {
+    if (activeDemoExIdx === null) return;
+    const ex = state.program[activeDayIdx].exercises[activeDemoExIdx];
+    delete ex.videoUrl;
+    document.getElementById("demoVideoInput").value = "";
+    document.getElementById("clearVidBtn").classList.add("hidden");
+    saveState();
+    activeDemoMode = "anim";
+    renderDemoStage();
+    renderWorkout();
+  }
+
+  function switchView(view) {
+    document.getElementById("viewTrain").classList.toggle("hidden", view !== "train");
+    document.getElementById("viewCharts").classList.toggle("hidden", view !== "charts");
+    document.getElementById("viewHistory").classList.toggle("hidden", view !== "history");
+
+    document.getElementById("navTrain").classList.toggle("active", view === "train");
+    document.getElementById("navCharts").classList.toggle("active", view === "charts");
+    document.getElementById("navHistory").classList.toggle("active", view === "history");
+
+    if (view === "charts") {
+      populateExerciseDropdown();
+      renderChart();
+      renderOverallVolumeChart();
+    }
+    if (view === "history") renderHistory();
+  }
+
+  function renderTabs() {
+    const container = document.getElementById("dayTabs");
+    container.innerHTML = state.program.map((day, idx) => `
+      <div class="day-tab ${idx === activeDayIdx ? "active" : ""}" onclick="selectDay(${idx})">
+        <strong>${day.short}</strong>
+        <small>${day.label}</small>
+      </div>
+    `).join("");
+  }
+
+  function selectDay(idx) {
+    activeDayIdx = idx;
+    toggleAddExerciseForm(false);
+    saveState();
+    renderTabs();
+    renderWorkout();
+  }
+
+  function checkOverloadReady(ex) {
+    if (!ex.sets || ex.sets.length === 0) return false;
+    return ex.sets.every(s => s.done && Number(s.r) >= ex.maxReps);
+  }
+
+  function getPreviousLogText(exName) {
+    for (let i = state.history.length - 1; i >= 0; i--) {
+      const found = state.history[i].exercises.find(e => e.name === exName);
+      if (found && found.sets.length > 0) {
+        const best = found.sets.map(s => `${s.w}lb &times; ${s.r}`).join(", ");
+        return `Last logged (${state.history[i].date}): ${best}`;
+      }
+    }
+    return "First tracked session for this movement";
+  }
+
+  function updateSummaryBar() {
+    const day = state.program[activeDayIdx];
+    let totalSets = 0;
+    let doneSets = 0;
+    let volume = 0;
+    let overloadCount = 0;
+
+    day.exercises.forEach(ex => {
+      if (checkOverloadReady(ex)) overloadCount++;
+      ex.sets.forEach(s => {
+        totalSets++;
+        if (s.done) {
+          doneSets++;
+          volume += (Number(s.w) || 0) * (Number(s.r) || 0);
+        }
+      });
+    });
+
+    document.getElementById("statSets").textContent = `${doneSets} / ${totalSets}`;
+    document.getElementById("statVolume").textContent = volume.toLocaleString();
+    document.getElementById("statOverload").textContent = overloadCount;
+  }
+
+  function renderWorkout() {
+    const day = state.program[activeDayIdx];
+    const list = document.getElementById("exerciseList");
+
+    list.innerHTML = day.exercises.map((ex, exIdx) => {
+      const isReady = checkOverloadReady(ex);
+      const hasVid = Boolean(extractYouTubeId(ex.videoUrl));
+      const setsHtml = ex.sets.map((s, sIdx) => `
+        <div class="set-row ${s.done ? "completed" : ""}" id="row-${exIdx}-${sIdx}">
+          <div class="set-num">${sIdx + 1}</div>
+          <input class="set-input" type="number" inputmode="decimal" value="${s.w}"
+            oninput="updateSet(${exIdx}, ${sIdx}, 'w', this.value)" aria-label="Weight" />
+          <input class="set-input" type="number" inputmode="numeric" value="${s.r}"
+            oninput="updateSet(${exIdx}, ${sIdx}, 'r', this.value)" aria-label="Reps" />
+          <button class="check-btn ${s.done ? "done" : ""}" onclick="toggleSetDone(${exIdx}, ${sIdx})">&check;</button>
+          ${sIdx > 0
+            ? `<button class="del-set-btn" onclick="removeSet(${exIdx}, ${sIdx})" title="Remove set">&times;</button>`
+            : `<div></div>`}
+        </div>
+      `).join("");
+
+      return `
+        <div class="exercise-card">
+          <div class="ex-header">
+            <div class="ex-title">${escapeHtml(ex.name)}</div>
+            <div class="ex-actions">
+              <div class="ex-target">${ex.sets.length} &times; ${ex.minReps}&ndash;${ex.maxReps}</div>
+              <button class="mini-btn demo" onclick="openDemoModal(${exIdx})" title="Form & Video Demo">${hasVid ? "Video" : "Demo"}</button>
+              <button class="mini-btn" onclick="renameExercise(${exIdx})" title="Swap / Rename">Swap</button>
+              <button class="mini-btn danger" onclick="deleteExercise(${exIdx})" title="Delete Exercise">Del</button>
+            </div>
+          </div>
+          <div class="safety-cue"><strong>FORM CUE:</strong> ${escapeHtml(ex.cue)}</div>
+          <div class="prev-note">${getPreviousLogText(ex.name)}</div>
+          <div id="badge-${exIdx}" class="overload-badge ${isReady ? "" : "hidden"}">
+            &#9733; Progression Target Hit! Add +5 lbs next session.
+          </div>
+          <div class="set-headers">
+            <div>Set</div>
+            <div>Lbs</div>
+            <div>Reps</div>
+            <div>Done</div>
+            <div></div>
+          </div>
+          ${setsHtml}
+          <button class="add-set-btn" onclick="addSet(${exIdx})">+ Add Set</button>
+        </div>
+      `;
+    }).join("");
+
+    updateSummaryBar();
+  }
+
+  function toggleAddExerciseForm(show) {
+    document.getElementById("addExForm").classList.toggle("hidden", !show);
+    document.getElementById("showAddExBtn").classList.toggle("hidden", show);
+    if (show) document.getElementById("newExName").focus();
+  }
+
+  function saveNewExercise() {
+    const nameInput = document.getElementById("newExName");
+    const name = nameInput.value.trim();
+    if (!name) {
+      alert("Enter an exercise name first.");
+      return;
+    }
+
+    const numSets = Math.max(1, Math.min(10, Number(document.getElementById("newExSets").value) || 3));
+    const minReps = Math.max(1, Number(document.getElementById("newExMin").value) || 8);
+    const maxReps = Math.max(minReps, Number(document.getElementById("newExMax").value) || 12);
+    const cue = document.getElementById("newExCue").value.trim() || "Maintain neutral spine, braced core, and controlled 2-3 sec negative.";
+    const videoUrl = document.getElementById("newExVideo").value.trim();
+
+    const sets = [];
+    for (let i = 0; i < numSets; i++) {
+      sets.push({ w: 0, r: minReps, done: false });
+    }
+
+    const newObj = {
+      name: name,
+      minReps: minReps,
+      maxReps: maxReps,
+      cue: cue,
+      sets: sets
+    };
+    if (extractYouTubeId(videoUrl)) newObj.videoUrl = videoUrl;
+
+    state.program[activeDayIdx].exercises.push(newObj);
+
+    nameInput.value = "";
+    document.getElementById("newExCue").value = "";
+    document.getElementById("newExVideo").value = "";
+    toggleAddExerciseForm(false);
+    saveState();
+    renderWorkout();
+  }
+
+  function renameExercise(exIdx) {
+    const ex = state.program[activeDayIdx].exercises[exIdx];
+    const newName = prompt("Swap or rename exercise:", ex.name);
+    if (newName && newName.trim()) {
+      ex.name = newName.trim();
+      delete ex.anim;
+      const newCue = prompt("Update disc-safety / form cue (optional):", ex.cue);
+      if (newCue !== null && newCue.trim()) {
+        ex.cue = newCue.trim();
+      }
+      saveState();
+      renderWorkout();
+    }
+  }
+
+  function deleteExercise(exIdx) {
+    const day = state.program[activeDayIdx];
+    const ex = day.exercises[exIdx];
+    if (day.exercises.length <= 1) {
+      alert("Keep at least one exercise in the workout.");
+      return;
+    }
+    if (confirm(`Remove "${ex.name}" from ${day.short}? (Your past history logs will still be preserved.)`)) {
+      day.exercises.splice(exIdx, 1);
+      saveState();
+      renderWorkout();
+    }
+  }
+
+  function updateSet(exIdx, sIdx, field, val) {
+    const ex = state.program[activeDayIdx].exercises[exIdx];
+    ex.sets[sIdx][field] = val === "" ? 0 : Number(val);
+    saveState();
+
+    const badge = document.getElementById(`badge-${exIdx}`);
+    if (badge) badge.classList.toggle("hidden", !checkOverloadReady(ex));
+    updateSummaryBar();
+  }
+
+  function toggleSetDone(exIdx, sIdx) {
+    const ex = state.program[activeDayIdx].exercises[exIdx];
+    ex.sets[sIdx].done = !ex.sets[sIdx].done;
+    saveState();
+    renderWorkout();
+
+    if (ex.sets[sIdx].done) {
+      setTimer(90);
+      startTimer();
+    }
+  }
+
+  function addSet(exIdx) {
+    const ex = state.program[activeDayIdx].exercises[exIdx];
+    const last = ex.sets[ex.sets.length - 1] || { w: 0, r: ex.minReps };
+    ex.sets.push({ w: last.w, r: last.r, done: false });
+    saveState();
+    renderWorkout();
+  }
+
+  function removeSet(exIdx, sIdx) {
+    const ex = state.program[activeDayIdx].exercises[exIdx];
+    if (ex.sets.length > 1) {
+      ex.sets.splice(sIdx, 1);
+      saveState();
+      renderWorkout();
+    }
+  }
+
+  function finishSession() {
+    const day = state.program[activeDayIdx];
+    let volume = 0;
+    let completedExercises = [];
+
+    day.exercises.forEach(ex => {
+      const doneSets = ex.sets.filter(s => s.done);
+      if (doneSets.length > 0) {
+        doneSets.forEach(s => volume += (Number(s.w) || 0) * (Number(s.r) || 0));
+        completedExercises.push({
+          name: ex.name,
+          sets: JSON.parse(JSON.stringify(doneSets))
+        });
+      }
+    });
+
+    if (completedExercises.length === 0) {
+      alert("Check off at least one completed set before saving the workout.");
+      return;
+    }
+
+    state.history.push({
+      id: Date.now(),
+      date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      dayTitle: day.title,
+      volume: volume,
+      exercises: completedExercises
+    });
+
+    day.exercises.forEach(ex => ex.sets.forEach(s => s.done = false));
+    saveState();
+    renderWorkout();
+    switchView("charts");
+  }
+
+  /* PROGRESSION CHART ENGINE */
+  function populateExerciseDropdown() {
+    const select = document.getElementById("chartExerciseSelect");
+    const currentVal = select.value;
+    const seen = new Set();
+    let optionsHtml = "";
+
+    state.program.forEach(day => {
+      optionsHtml += `<optgroup label="${day.short} - ${day.label}">`;
+      day.exercises.forEach(ex => {
+        seen.add(ex.name);
+        optionsHtml += `<option value="${escapeHtml(ex.name)}">${escapeHtml(ex.name)}</option>`;
+      });
+      optionsHtml += `</optgroup>`;
+    });
+
+    const pastOnly = [];
+    state.history.forEach(h => {
+      h.exercises.forEach(e => {
+        if (!seen.has(e.name)) {
+          seen.add(e.name);
+          pastOnly.push(e.name);
+        }
+      });
+    });
+
+    if (pastOnly.length > 0) {
+      optionsHtml += `<optgroup label="Archived / Previous Movements">`;
+      pastOnly.forEach(name => {
+        optionsHtml += `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`;
+      });
+      optionsHtml += `</optgroup>`;
+    }
+
+    select.innerHTML = optionsHtml;
+    if (currentVal && seen.has(currentVal)) select.value = currentVal;
+  }
+
+  function setChartMetric(metric) {
+    activeChartMetric = metric;
+    document.getElementById("metricWeightBtn").classList.toggle("active", metric === "weight");
+    document.getElementById("metricVolumeBtn").classList.toggle("active", metric === "volume");
+    renderChart();
+  }
+
+  function buildSvgLineChart(points, strokeColor) {
+    if (points.length === 0) {
+      return `<div style="text-align:center; color:var(--muted); font-size:0.78rem; padding:34px 12px;">
+        No completed sessions recorded for this metric yet. Finish a workout to see your Machamp 4D progression graph.
+      </div>`;
+    }
+
+    const w = 520;
+    const h = 190;
+    const padL = 42;
+    const padR = 24;
+    const padT = 26;
+    const padB = 30;
+    const plotW = w - padL - padR;
+    const plotH = h - padT - padB;
+
+    const vals = points.map(p => p.val);
+    let minV = Math.min(...vals);
+    let maxV = Math.max(...vals);
+    if (minV === maxV) {
+      minV = Math.max(0, minV - 10);
+      maxV = maxV + 10;
+    } else {
+      const margin = (maxV - minV) * 0.15;
+      minV = Math.max(0, minV - margin);
+      maxV = maxV + margin;
+    }
+
+    const coords = points.map((p, i) => {
+      const x = points.length === 1
+        ? padL + plotW / 2
+        : padL + (i / (points.length - 1)) * plotW;
+      const y = padT + plotH - ((p.val - minV) / (maxV - minV)) * plotH;
+      return { x, y, val: p.val, label: p.label };
+    });
+
+    const linePath = coords.map((c, i) => `${i === 0 ? "M" : "L"}${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(" ");
+    const areaPath = coords.length > 1
+      ? `${linePath} L${coords[coords.length - 1].x.toFixed(1)},${padT + plotH} L${coords[0].x.toFixed(1)},${padT + plotH} Z`
+      : "";
+
+    const gridLines = [0, 0.5, 1].map(ratio => {
+      const gy = padT + plotH - ratio * plotH;
+      const gVal = Math.round(minV + ratio * (maxV - minV));
+      return `
+        <line x1="${padL}" y1="${gy.toFixed(1)}" x2="${w - padR}" y2="${gy.toFixed(1)}" stroke="#33485c" stroke-dasharray="3,3" stroke-width="1" />
+        <text x="${padL - 6}" y="${(gy + 4).toFixed(1)}" fill="#93adc2" font-size="10" text-anchor="end">${gVal}</text>
+      `;
+    }).join("");
+
+    const dotsAndLabels = coords.map((c, idx) => {
+      const showDate = points.length <= 6 || idx === 0 || idx === points.length - 1 || idx === Math.floor(points.length / 2);
+      return `
+        <circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="4.5" fill="${strokeColor}" stroke="#0d131a" stroke-width="2" />
+        <text x="${c.x.toFixed(1)}" y="${(c.y - 9).toFixed(1)}" fill="#f1f5f9" font-size="10.5" font-weight="700" text-anchor="middle">${c.val}</text>
+        ${showDate ? `<text x="${c.x.toFixed(1)}" y="${h - 8}" fill="#93adc2" font-size="9.5" text-anchor="middle">${c.label}</text>` : ""}
+      `;
+    }).join("");
+
+    return `
+      <svg viewBox="0 0 ${w} ${h}" style="width:100%; height:auto; display:block;">
+        ${gridLines}
+        ${areaPath ? `<path d="${areaPath}" fill="${strokeColor}" fill-opacity="0.14" />` : ""}
+        ${coords.length > 1 ? `<path d="${linePath}" fill="none" stroke="${strokeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />` : ""}
+        ${dotsAndLabels}
+      </svg>
+    `;
+  }
+
+  function renderChart() {
+    const selectedEx = document.getElementById("chartExerciseSelect").value;
+    const points = [];
+
+    state.history.forEach(session => {
+      const match = session.exercises.find(e => e.name === selectedEx);
+      if (match && match.sets.length > 0) {
+        const shortDate = session.date.replace(/,\s*\d{4}$/, "");
+        if (activeChartMetric === "weight") {
+          const maxW = Math.max(...match.sets.map(s => Number(s.w) || 0));
+          points.push({ label: shortDate, val: maxW });
+        } else {
+          const vol = match.sets.reduce((acc, s) => acc + (Number(s.w) || 0) * (Number(s.r) || 0), 0);
+          points.push({ label: shortDate, val: vol });
+        }
+      }
+    });
+
+    const recentPoints = points.slice(-12);
+
+    if (recentPoints.length > 0) {
+      const firstVal = recentPoints[0].val;
+      const prVal = Math.max(...recentPoints.map(p => p.val));
+      const latestVal = recentPoints[recentPoints.length - 1].val;
+      const diff = latestVal - firstVal;
+      const sign = diff > 0 ? "+" : "";
+
+      document.getElementById("chartStart").textContent = `${firstVal.toLocaleString()}`;
+      document.getElementById("chartPR").textContent = `${prVal.toLocaleString()}`;
+      document.getElementById("chartGain").textContent = `${sign}${diff.toLocaleString()}`;
+      document.getElementById("chartGain").style.color = diff >= 0 ? "var(--accent)" : "var(--danger)";
+    } else {
+      document.getElementById("chartStart").textContent = "--";
+      document.getElementById("chartPR").textContent = "--";
+      document.getElementById("chartGain").textContent = "--";
+    }
+
+    document.getElementById("chartContainer").innerHTML = buildSvgLineChart(recentPoints, "#eab308");
+  }
+
+  function renderOverallVolumeChart() {
+    const recentSessions = state.history.slice(-10).map(s => ({
+      label: s.date.replace(/,\s*\d{4}$/, ""),
+      val: Number(s.volume) || 0
+    }));
+    document.getElementById("overallChartContainer").innerHTML = buildSvgLineChart(recentSessions, "#6488a3");
+  }
+
+  /* HISTORY & BACKUP */
+  function renderHistory() {
+    const container = document.getElementById("historyList");
+    if (state.history.length === 0) {
+      container.innerHTML = `
+        <div class="history-card" style="text-align:center; color:var(--muted); padding:24px;">
+          No completed workouts saved yet. Finish a session to log your Machamp 4D progress here.
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = [...state.history].reverse().map(item => `
+      <div class="history-card">
+        <div class="history-top">
+          <strong style="font-size:0.92rem; color:var(--accent);">${escapeHtml(item.dayTitle)}</strong>
+          <span style="font-size:0.75rem; color:var(--muted);">${item.date}</span>
+        </div>
+        <div style="font-size:0.78rem; color:#93adc2; font-weight:700; margin-bottom:6px;">
+          Total Volume: ${item.volume.toLocaleString()} lbs
+        </div>
+        <div style="font-size:0.76rem; color:var(--text);">
+          ${item.exercises.map(e => `&bull; ${escapeHtml(e.name)}: ${e.sets.map(s => `${s.w}&times;${s.r}`).join(", ")}`).join("<br>")}
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function exportData() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Machamp4D_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const imported = JSON.parse(e.target.result);
+        if (imported && Array.isArray(imported.program)) {
+          state = imported;
+          activeDayIdx = state.activeDayIdx || 0;
+          saveState();
+          renderTabs();
+          renderWorkout();
+          renderHistory();
+          alert("Machamp 4D workout data restored successfully.");
+        }
+      } catch (err) {
+        alert("Invalid backup file.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  /* REST TIMER */
+  let timerSeconds = 90;
+  let timerInterval = null;
+
+  function formatTime(sec) {
+    const m = String(Math.floor(sec / 60)).padStart(2, "0");
+    const s = String(sec % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  function setTimer(sec) {
+    stopTimer();
+    timerSeconds = sec;
+    document.getElementById("timerDisplay").textContent = formatTime(timerSeconds);
+  }
+
+  function startTimer() {
+    if (timerInterval) return;
+    document.getElementById("timerToggleBtn").textContent = "Pause";
+    timerInterval = setInterval(() => {
+      if (timerSeconds > 0) {
+        timerSeconds--;
+        document.getElementById("timerDisplay").textContent = formatTime(timerSeconds);
+      } else {
+        stopTimer();
+        playChime();
+      }
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    document.getElementById("timerToggleBtn").textContent = "Start";
+  }
+
+  function toggleTimer() {
+    if (timerInterval) stopTimer();
+    else startTimer();
+  }
+
+  function playChime() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.5);
+    } catch (e) {}
+  }
+
+  renderTabs();
+  renderWorkout();
+</script>
+</body>
+</html>
